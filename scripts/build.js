@@ -1,10 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const src = fs.readFileSync(path.join(__dirname, '../src/calculator.js'), 'utf8');
-const browser = src.replace('module.exports = { add, subtract, multiply, divide };', '');
+const root = path.join(__dirname, '..');
+const outDir = path.join(root, 'dist');
+const outSrc = path.join(outDir, 'src');
 
-const outDir = path.join(__dirname, '../dist');
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, 'calculator.js'), browser.trim());
-console.log('Build OK: dist/calculator.js');
+fs.rmSync(outDir, { recursive: true, force: true });
+fs.mkdirSync(outSrc, { recursive: true });
+
+fs.copyFileSync(path.join(root, 'index.html'), path.join(outDir, 'index.html'));
+fs.copyFileSync(path.join(root, 'src', 'calculator.js'), path.join(outSrc, 'calculator.js'));
+
+console.log('Build OK: dist/index.html, dist/src/calculator.js');
